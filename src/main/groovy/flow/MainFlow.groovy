@@ -27,29 +27,51 @@ class MainFlow {
             'charset="big5">;':'charset="UTF-8">;',
             'request.setCharacterEncoding("big5");':'request.setCharacterEncoding("UTF-8");',
             'request.setCharacterEncoding("BIG5");':'request.setCharacterEncoding("UTF-8");',
-            '"text/html; charset=MS950"':'"text/html; charset=UTF-8"',
-            '"text/html; charset=big5"':'"text/html; charset=UTF-8"',
-            '"text/html; charset=Big5"':'"text/html; charset=UTF-8"',
-            '"text/html;charset=big5"':'"text/html; charset=UTF-8"',
-            '"text/html;charset=Big5"':'"text/html; charset=UTF-8"',
-            '"text/html;charset=BIG5"':'"text/html; charset=UTF-8"',
+            '"text/html;charset=ms950"'         :'"text/html; charset=UTF-8"',
+            '"text/html;charset=Ms950"'         :'"text/html; charset=UTF-8"',
+            '"text/html;charset=MS950"'         :'"text/html; charset=UTF-8"',
+            '"text/html; charset=ms950"'        :'"text/html; charset=UTF-8"',
+            '"text/html; charset=Ms950"'        :'"text/html; charset=UTF-8"',
+            '"text/html; charset=MS950"'        :'"text/html; charset=UTF-8"',
+            '"text/html; charset=big5"'         :'"text/html; charset=UTF-8"',
+            '"text/html; charset=Big5"'         :'"text/html; charset=UTF-8"',
+            '"text/html; charset=BIG5"'         :'"text/html; charset=UTF-8"',
+            '"text/html;charset=big5"'          :'"text/html; charset=UTF-8"',
+            '"text/html;charset=Big5"'          :'"text/html; charset=UTF-8"',
+            '"text/html;charset=BIG5"'          :'"text/html; charset=UTF-8"',
             '"text/html; charset = big5"':'contentType="text/html; charset=UTF-8"',
-            'response.setContentType("text/html; charset=big5");':'response.setContentType("text/html; charset=UTF-8");',
-            'request.getContextPath()%>/resources/js/function.min.js" charset="big5"':'request.getContextPath()%>/resources/js/function.min.js" charset="UTF-8"',
-            'src="<%=request.getContextPath()%>/resources/ajax/LoadingPage.js" charset="big5"':'src="<%=request.getContextPath()%>/resources/ajax/LoadingPage.js" charset="UTF-8"',
-            '<%=request.getContextPath()%>/resources/js/map/map.layer.js" charset="BIG5"':'<%=request.getContextPath()%>/resources/js/map/map.layer.js" charset="UTF-8"',
-            '<%=request.getContextPath()%>/resources/js/map/map.ui.js" charset="BIG5"':'<%=request.getContextPath()%>/resources/js/map/map.ui.js" charset="UTF-8"',
-            '<%=request.getContextPath()%>/resources/js/map/map.func.js" charset="BIG5"':'<%=request.getContextPath()%>/resources/js/map/map.func.js" charset="UTF-8""',
-            '<%=request.getContextPath()%>/resources/js/map/map.func.searchAGY.js" charset="BIG5"':'<%=request.getContextPath()%>/resources/js/map/map.func.searchAGY.js" charset="UTF-8""',
-            '<%=request.getContextPath()%>/resources/js/map/map.func.buffer.js" charset="BIG5"':'<%=request.getContextPath()%>/resources/js/map/map.func.buffer.js" charset="UTF-8""',
-            '<%=contextPath + srcPath + "/js/function.min.js?version=20150608"%>" charset="big5"':'<%=contextPath + srcPath + "/js/function.min.js?version=20150608"%>" charset="UTF-8""',
-            'src="<%=request.getContextPath()%>/resources/js/Chart.min.js" charset="big5"':'src="<%=request.getContextPath()%>/resources/js/Chart.min.js" charset="UTF-8""',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/CheckData.js"+version+"\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/CheckData.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/DateUtil.js"+version+"\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/DateUtil.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine-zh.js"+version+"\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine-zh.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/function.min.js?version=20150608\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/function.min.js?version=20150608\\" charset=\\"UTF-8\\"></script>");',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/ajax/LoadingPage.js"+version+"\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/ajax/LoadingPage.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
-            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"big5\\"></script>");':'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'response.setContentType("text/html; charset=big5");':
+                    'response.setContentType("text/html; charset=UTF-8");',
+            'request.getContextPath()%>/resources/js/function.min.js" charset="big5"':
+                    'request.getContextPath()%>/resources/js/function.min.js" charset="UTF-8"',
+            'src="<%=request.getContextPath()%>/resources/ajax/LoadingPage.js" charset="big5"':
+                    'src="<%=request.getContextPath()%>/resources/ajax/LoadingPage.js" charset="UTF-8"',
+            '<%=request.getContextPath()%>/resources/js/map/map.layer.js" charset="BIG5"':
+                    '<%=request.getContextPath()%>/resources/js/map/map.layer.js" charset="UTF-8"',
+            '<%=request.getContextPath()%>/resources/js/map/map.ui.js" charset="BIG5"':
+                    '<%=request.getContextPath()%>/resources/js/map/map.ui.js" charset="UTF-8"',
+            '<%=request.getContextPath()%>/resources/js/map/map.func.js" charset="BIG5"':
+                    '<%=request.getContextPath()%>/resources/js/map/map.func.js" charset="UTF-8""',
+            '<%=request.getContextPath()%>/resources/js/map/map.func.searchAGY.js" charset="BIG5"':
+                    '<%=request.getContextPath()%>/resources/js/map/map.func.searchAGY.js" charset="UTF-8""',
+            '<%=request.getContextPath()%>/resources/js/map/map.func.buffer.js" charset="BIG5"':
+                    '<%=request.getContextPath()%>/resources/js/map/map.func.buffer.js" charset="UTF-8""',
+            '<%=contextPath + srcPath + "/js/function.min.js?version=20150608"%>" charset="big5"':
+                    '<%=contextPath + srcPath + "/js/function.min.js?version=20150608"%>" charset="UTF-8""',
+            'src="<%=request.getContextPath()%>/resources/js/Chart.min.js" charset="big5"':
+                    'src="<%=request.getContextPath()%>/resources/js/Chart.min.js" charset="UTF-8""',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/CheckData.js"+version+"\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/CheckData.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/DateUtil.js"+version+"\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/DateUtil.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine-zh.js"+version+"\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine-zh.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/function.min.js?version=20150608\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/function.min.js?version=20150608\\" charset=\\"UTF-8\\"></script>");',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/ajax/LoadingPage.js"+version+"\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/ajax/LoadingPage.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"big5\\"></script>");':
+                    'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
     ]
 
 

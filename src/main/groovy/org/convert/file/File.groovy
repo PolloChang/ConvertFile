@@ -222,7 +222,7 @@ class File {
                     pw.write("//${comments}\r\n")
                     break
                 case ".jsp":
-                    pw.write("<%--${comments}-->\r\n")
+                    pw.write("<%--${comments}--%>\r\n")
                     break
             }
 
