@@ -10,7 +10,7 @@ class MainFlow {
     //參數設定:設定轉碼目標
     private final static String trunEncode = "UTF-8"
     //參數設定:起始目錄
-    private final static String startPath = "D:/Wezoomtek/swjweb"
+    private final static String startPath = "/home/jameschang/test/file"
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
@@ -18,7 +18,7 @@ class MainFlow {
             ".js",".css",".txt",".properties"
     ]
     //參數設定:目的路徑
-    private final static String purposePath = "C:/Desktop/swjweb"
+    private final static String purposePath = "/home/jameschang/test/file2"
     //排除路徑
     private final static String[] exPathL = [
             "build","dist","nbproject","PA-DOC",".git"
@@ -86,7 +86,7 @@ class MainFlow {
 
         List<String> findLineL = []
 
-        String action = "convertAndReplace"
+        String action = "search"
 
         switch (action){
             case "search":
