@@ -12,7 +12,11 @@ class MainFlow {
     //參數設定:起始目錄
     private final static String startPath = "D:/Wezoomtek/swjweb"
     //參數設定:篩選檔案
-    private final static String[] pFilterL = [".jsp",".java",".js",".css",".txt",".properties"]
+    private final static String[] pFilterL = [
+            ".jsp",
+            ".java",
+            ".js",".css",".txt",".properties"
+    ]
     //參數設定:目的路徑
     private final static String purposePath = "C:/Desktop/swjweb"
     //排除路徑
@@ -94,7 +98,7 @@ class MainFlow {
                             File.searchFileContent(
                                 fileSourceDirI,
                                 File.checkEncoding(fileSourceDirI),
-                                "big5"
+                                "setQueryTimeOut"
                             ).stream()
                                 .filter({stringI -> findLineL.indexOf(stringI) == -1})
                                 .each {stringI ->
@@ -102,6 +106,11 @@ class MainFlow {
                                 }
                             trunFiles ++
                         })
+
+                println "==============================================="
+                File.getFindList().each {
+                    println it
+                }
                 break
             case "convertAndReplace":
                 println "convertAndReplace"

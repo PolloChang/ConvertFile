@@ -9,8 +9,31 @@ import java.util.stream.Collectors
  */
 class File {
 
+    private static int findCount = 0;
+
+    static setFindCount(int i){
+        findCount = findCount+i
+    }
+
+    static getFindCount(){
+        return findCount
+    }
+
+    private static List<String> findList = new ArrayList<String>()
+
+    static setFindList(String fileI){
+        if(findList.indexOf(fileI)==-1){
+            findList.add(fileI)
+        }
+    }
+
+    static List<String> getFindList(){
+        return findList
+    }
+
+
     /** 檔案集合 */
-    public static List<String> gFileList = new ArrayList<String>();
+    public static List<String> gFileList = new ArrayList<String>()
 
     /**
      * 取得要處理的檔案
@@ -268,6 +291,7 @@ class File {
             .filter({lineI -> lineI.toUpperCase().replaceAll("\\s*", "").indexOf(keyWord) != -1})
             .filter({lineI->findLineL.indexOf(lineI) == -1})
             .each {lineI ->
+                setFindList(filePath)
                 findLineL.add(lineI)
             }
 
