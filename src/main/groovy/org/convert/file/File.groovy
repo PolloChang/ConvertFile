@@ -297,4 +297,26 @@ class File {
 
         return findLineL
     }
+
+    /**
+     * 尋找資料，模糊查詢清單
+     * @param filePath 目標檔案路徑
+     * @param fileCode 檔案編碼
+     * @param keyWordL 查詢關鍵字清單
+     * @return 有找到
+     * @throws IOException
+     */
+    static List<String> searchFileContent(String filePath,String fileCode, List<String> keyWordL) throws Exception {
+        List<String> findLineL = []
+
+        keyWordL.each { keyWordI ->
+            findLineL.addAll(searchFileContent(
+                    filePath,
+                    fileCode,
+                    keyWordI
+            ))
+
+        }
+        return findLineL
+    }
 }

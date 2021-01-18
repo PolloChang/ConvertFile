@@ -1,5 +1,6 @@
 package flow
 
+import groovy.json.JsonOutput
 import org.convert.file.File
 
 class MainFlow {
@@ -10,15 +11,15 @@ class MainFlow {
     //參數設定:設定轉碼目標
     private final static String trunEncode = "UTF-8"
     //參數設定:起始目錄
-    private final static String startPath = "/home/jameschang/test/file"
+    private final static String startPath = "D:\\Wezoomtek\\swjweb"
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
             ".java",
-            ".js",".css",".txt",".properties"
+            //".js",".css",".txt",".properties"
     ]
     //參數設定:目的路徑
-    private final static String purposePath = "/home/jameschang/test/file2"
+    private final static String purposePath = "C:\\Wezoomtek\\swjweb"
     //排除路徑
     private final static String[] exPathL = [
             "build","dist","nbproject","PA-DOC",".git"
@@ -98,7 +99,7 @@ class MainFlow {
                             File.searchFileContent(
                                 fileSourceDirI,
                                 File.checkEncoding(fileSourceDirI),
-                                "setQueryTimeOut"
+                                "rollBack()"
                             ).stream()
                                 .filter({stringI -> findLineL.indexOf(stringI) == -1})
                                 .each {stringI ->
@@ -110,6 +111,67 @@ class MainFlow {
                 println "==============================================="
                 File.getFindList().each {
                     println it
+                }
+                break
+            case "searchAndReplace":
+
+                List<String> doReplaceFileL = []
+
+                File.gFileList.stream()
+                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  File.checkEncoding(fileSourceDirI) != null})
+                        .filter({fileSourceDirI ->  File.checkEncoding(fileSourceDirI) != null})
+                        .forEach({ fileSourceDirI ->
+                            File.searchFileContent(
+                                    fileSourceDirI,
+                                    File.checkEncoding(fileSourceDirI),
+                                    [
+                                        "setAutoCommit(false);",
+                                        "setAutoCommit(false);",
+                                        "txConn.setAutoCommit(false);"
+                                    ]
+                            ).stream()
+                                    .each {stringI ->
+                                        if(findLineL.indexOf(stringI) == -1){
+                                            findLineL.add(stringI)
+                                        }
+                                        if(doReplaceFileL.indexOf(fileSourceDirI) == -1){
+                                            doReplaceFileL.add(fileSourceDirI)
+                                            trunFiles ++
+                                        }
+                                    }
+                        })
+
+                findLineL.stream().
+                        forEach({fileSourceDirI ->
+                            println fileSourceDirI
+                        })
+
+
+                LinkedHashMap replaceStringL = [
+                        "setAutoCommit(false);":"setAutoCommit(true);/*20210118 JamesChang 批次啟動自動交易模式*/"
+                ]
+                doReplaceFileL.each { fileSourceDirI->
+                    int i = File.searchFileContent(
+                            fileSourceDirI,
+                            File.checkEncoding(fileSourceDirI),
+                            "rollBack();"
+                    ).size()
+                    if(i == 0){
+                        String fileEncoding = File.checkEncoding(fileSourceDirI)
+                        String goalFileDir = fileSourceDirI.replace(startPath,purposePath)
+
+                        File.creatFile(goalFileDir)
+                        File.convertFileCode(
+                                fileSourceDirI,
+                                goalFileDir,
+                                fileEncoding,
+                                fileEncoding,
+                                replaceStringL
+                        )
+                    }
+                    else {
+                        println "需人工檢視 : ${fileSourceDirI}"
+                    }
                 }
                 break
             case "convertAndReplace":
