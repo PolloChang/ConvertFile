@@ -15,8 +15,8 @@ class MainFlow {
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
-//            ".java",
-//            ".js",".css",".txt",".properties"
+            ".java",
+            ".js",".css",".txt",".properties"
     ]
     //參數設定:目的路徑
     private final static String purposePath = "C:\\Wezoomtek\\swjweb"
@@ -83,6 +83,7 @@ class MainFlow {
                     'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/ajax/LoadingPage.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
             'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"big5\\"></script>");':
                     'out.println("<script language=\\"JavaScript\\" src=\\"" + contextPath + srcPath + "/js/jquery.validationEngine.3.0.0-zh_TW.js"+version+"\\" charset=\\"UTF-8\\"></script>");',
+            'StrUtil.substrByte':'app.util.StringTools.substrByte'
     ]
 
 
@@ -95,7 +96,7 @@ class MainFlow {
 
         List<String> findLineL = []
 
-        String action = "search"
+        String action = "convertAndReplace"
 
         switch (action){
             case "search":
@@ -107,7 +108,7 @@ class MainFlow {
                             file.searchFileContent(
                                 fileSourceDirI,
                                     file.checkEncoding(fileSourceDirI),
-                                "StrUtil"
+                                "StrUtil.substrByte"
                             ).stream()
                                 .filter({stringI -> findLineL.indexOf(stringI) == -1})
                                 .each {stringI ->
