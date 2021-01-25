@@ -15,8 +15,8 @@ class MainFlow {
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
-            ".java",
-            //".js",".css",".txt",".properties"
+//            ".java",
+//            ".js",".css",".txt",".properties"
     ]
     //參數設定:目的路徑
     private final static String purposePath = "C:\\Wezoomtek\\swjweb"
@@ -28,6 +28,12 @@ class MainFlow {
             'pageEncoding="big5"':'pageEncoding="UTF-8"',
             'pageEncoding="Big5"':'pageEncoding="UTF-8"',
             'pageEncoding="BIG5"':'pageEncoding="UTF-8"',
+            'pageEncoding = "big5"':'pageEncoding="UTF-8"',
+            'pageEncoding = "Big5"':'pageEncoding="UTF-8"',
+            'pageEncoding = "BIG5"':'pageEncoding="UTF-8"',
+            'pageEncoding="ms950"':'pageEncoding="UTF-8"',
+            'pageEncoding="Ms950"':'pageEncoding="UTF-8"',
+            'pageEncoding="MS950"':'pageEncoding="UTF-8"',
             'charset="big5">':'charset="UTF-8">',
             'charset="big5">;':'charset="UTF-8">;',
             'request.setCharacterEncoding("big5");':'request.setCharacterEncoding("UTF-8");',
@@ -82,24 +88,26 @@ class MainFlow {
 
     static void main(String[] args){
 
+        File file = new File()
+
         //取得要轉檔的檔案路徑
-        File.getPathDir(startPath,pFilterL,exPathL)
+        file.getPathDir(startPath,pFilterL,exPathL)
 
         List<String> findLineL = []
 
-        String action = "search"
+        String action = "convertAndReplace"
 
         switch (action){
             case "search":
                 //僅搜尋檔案
-                File.gFileList.stream()
-                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  File.checkEncoding(fileSourceDirI) != null})
-                        .filter({fileSourceDirI ->  File.checkEncoding(fileSourceDirI) != null})
+                file.gFileList.stream()
+                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  file.checkEncoding(fileSourceDirI) != null})
+                        .filter({fileSourceDirI ->  file.checkEncoding(fileSourceDirI) != null})
                         .forEach({ fileSourceDirI ->
                             File.searchFileContent(
                                 fileSourceDirI,
-                                File.checkEncoding(fileSourceDirI),
-                                "rollBack()"
+                                    file.checkEncoding(fileSourceDirI),
+                                "navigate"
                             ).stream()
                                 .filter({stringI -> findLineL.indexOf(stringI) == -1})
                                 .each {stringI ->
@@ -107,9 +115,11 @@ class MainFlow {
                                 }
                             trunFiles ++
                         })
-
+                findLineL.each {
+                    println it
+                }
                 println "==============================================="
-                File.getFindList().each {
+                file.getFindList().each {
                     println it
                 }
                 break
@@ -117,13 +127,13 @@ class MainFlow {
 
                 List<String> doReplaceFileL = []
 
-                File.gFileList.stream()
-                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  File.checkEncoding(fileSourceDirI) != null})
-                        .filter({fileSourceDirI ->  File.checkEncoding(fileSourceDirI) != null})
+                file.gFileList.stream()
+                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  file.checkEncoding(fileSourceDirI) != null})
+                        .filter({fileSourceDirI ->  file.checkEncoding(fileSourceDirI) != null})
                         .forEach({ fileSourceDirI ->
-                            File.searchFileContent(
+                            file.searchFileContent(
                                     fileSourceDirI,
-                                    File.checkEncoding(fileSourceDirI),
+                                    file.checkEncoding(fileSourceDirI),
                                     [
                                         "setAutoCommit(false);",
                                         "setAutoCommit(false);",
@@ -151,17 +161,17 @@ class MainFlow {
                         "setAutoCommit(false);":"setAutoCommit(true);/*20210118 JamesChang 批次啟動自動交易模式*/"
                 ]
                 doReplaceFileL.each { fileSourceDirI->
-                    int i = File.searchFileContent(
+                    int i = file.searchFileContent(
                             fileSourceDirI,
-                            File.checkEncoding(fileSourceDirI),
+                            file.checkEncoding(fileSourceDirI),
                             "rollBack();"
                     ).size()
                     if(i == 0){
-                        String fileEncoding = File.checkEncoding(fileSourceDirI)
+                        String fileEncoding = file.checkEncoding(fileSourceDirI)
                         String goalFileDir = fileSourceDirI.replace(startPath,purposePath)
 
-                        File.creatFile(goalFileDir)
-                        File.convertFileCode(
+                        file.creatFile(goalFileDir)
+                        file.convertFileCode(
                                 fileSourceDirI,
                                 goalFileDir,
                                 fileEncoding,
@@ -177,40 +187,29 @@ class MainFlow {
             case "convertAndReplace":
                 println "convertAndReplace"
                 //取代檔案內容並轉檔
-                File.gFileList.stream()
-                    .filter({ fileSourceDirI -> fileSourceDirI != "" &&  File.checkEncoding(fileSourceDirI) != null})
-                    .filter({fileSourceDirI ->  File.checkEncoding(fileSourceDirI) != null})
-                    .forEach({ fileSourceDirI ->
-                        String goalFileDir = fileSourceDirI.replace(startPath,purposePath);
+                file.convertAndReplace(
+                        startPath,
+                        purposePath,
+                        trunEncode,
+                        replaceStringL
+                    )
 
-                        File.creatFile(goalFileDir)
-//                        println "${fileSourceDirI} -> ${goalFileDir}"
-
-                        File.convertFileCode(
-                                fileSourceDirI,
-                                goalFileDir,
-                                File.checkEncoding(fileSourceDirI),
-                                trunEncode,
-                                replaceStringL
-                        )
-                        trunFiles ++
-                    })
                 break
             case "convert":
                 println "convert"
                 //轉檔
-                File.gFileList.stream()
-                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  File.checkEncoding(fileSourceDirI) != null})
-                        .filter({fileSourceDirI ->  File.checkEncoding(fileSourceDirI) != null})
+                file.gFileList.stream()
+                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  file.checkEncoding(fileSourceDirI) != null})
+                        .filter({fileSourceDirI ->  file.checkEncoding(fileSourceDirI) != null})
                         .forEach({ fileSourceDirI ->
                             String goalFileDir = fileSourceDirI.replace(startPath,purposePath);
 
-                            File.creatFile(goalFileDir)
+                            file.creatFile(goalFileDir)
 
-                            File.convertFileCode(
+                            file.convertFileCode(
                                     fileSourceDirI,
                                     goalFileDir,
-                                    File.checkEncoding(fileSourceDirI),
+                                    file.checkEncoding(fileSourceDirI),
                                     trunEncode
                             )
                             trunFiles ++

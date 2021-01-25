@@ -1,5 +1,6 @@
 package org.convert.file
 
+import org.convert.encoding.big5toutf8.InternetExplorer
 import org.mozilla.universalchardet.UniversalDetector
 
 import java.util.stream.Collectors
@@ -9,31 +10,86 @@ import java.util.stream.Collectors
  */
 class File {
 
-    private static int findCount = 0;
+    /**
+     * 轉檔與處理檔案內容
+     * @param startPath
+     * @param purposePath
+     * @param trunEncode
+     * @param replaceStringL
+     * @return
+     */
+    void convertAndReplace(
+            String startPath,
+            String purposePath,
+            String trunEncode,
+            LinkedHashMap replaceStringL
+    ){
+        gFileList.stream()
+                .filter({ fileSourceDirI -> fileSourceDirI != "" &&  checkEncoding(fileSourceDirI) != null})
+                .filter({fileSourceDirI ->  checkEncoding(fileSourceDirI) != null})
+                .forEach({ fileSourceDirI ->
+                    String goalFileDir = fileSourceDirI.replace(startPath,purposePath);
 
-    static setFindCount(int i){
+                    creatFile(goalFileDir)
+
+                    convertFileCode(
+                            fileSourceDirI,
+                            goalFileDir,
+                            checkEncoding(fileSourceDirI),
+                            trunEncode,
+                            replaceStringL
+                    )
+                })
+
+        if(errFileIEL.size() > 0){
+            println "以下檔案需人工檢視：encodeURI "
+            errFileIEL.each {
+                println it
+            }
+            println "以上檔案需人工檢視；encodeURI"
+        }
+    }
+
+    private int findCount = 0;
+
+    void setFindCount(int i){
         findCount = findCount+i
     }
 
-    static getFindCount(){
+    int getFindCount(){
         return findCount
     }
 
-    private static List<String> findList = new ArrayList<String>()
+    private List<String> findList = new ArrayList<String>()
 
-    static setFindList(String fileI){
+    void setFindList(String fileI){
         if(findList.indexOf(fileI)==-1){
             findList.add(fileI)
         }
     }
 
-    static List<String> getFindList(){
+    List<String> getFindList(){
         return findList
     }
 
 
     /** 檔案集合 */
-    public static List<String> gFileList = new ArrayList<String>()
+    public List<String> gFileList = new ArrayList<String>()
+
+    /**
+     * IE 轉錯需人工處理
+     * @return
+     */
+    List<String> getErrFileIEL() {
+        return errFileIEL
+    }
+
+    void setErrFileIEL(String errFileI) {
+        if(errFileIEL.indexOf(errFileI) == -1){
+            errFileIEL.add(errFileI)
+        }
+    }
+    private List<String> errFileIEL = new ArrayList<String>()
 
     /**
      * 取得要處理的檔案
@@ -41,7 +97,7 @@ class File {
      * @param fileFilterL 篩選附檔名
      * @param exPathL 排除路徑
      */
-    static void getPathDir(String startPath,String[] fileFilterL,String[] exPathL){
+    void getPathDir(String startPath,String[] fileFilterL,String[] exPathL){
         fileFilterL.each { fileFilterI ->
             getPathDir(startPath,fileFilterI,exPathL)
         }
@@ -54,7 +110,7 @@ class File {
      * @param fileFilter 篩選附檔名
      * @param exPathL 排除路徑
      */
-    static void getPathDir(
+    void getPathDir(
             String startPath,
             String fileFilter,
             String[] exPathL){
@@ -95,7 +151,7 @@ class File {
      * @param filePath 檔案路徑
      * @return
      */
-    static String checkEncoding(String filePath) {
+    String checkEncoding(String filePath) {
         /* 讀取檔案 */
         FileInputStream fis = new FileInputStream(filePath);
         /* 建立分析器 */
@@ -125,7 +181,7 @@ class File {
      * @param path
      * @throws IOException
      */
-    static void creatFile(String path) throws IOException {
+    void creatFile(String path) throws IOException {
         String checkPath = path.substring(0,path.lastIndexOf("/"));
         java.io.File newPath = new java.io.File( checkPath );
         //判斷目錄是否存在，不存在則建立
@@ -147,7 +203,7 @@ class File {
      * @param convertEncode 目標編碼
      * @throws IOException
      */
-    static void convertFileCode(
+    void convertFileCode(
             String fileSourceDir,
             String goalFileDir,
             String code,
@@ -177,7 +233,7 @@ class File {
      * @param convertEncode 目標編碼
      * @throws IOException
      */
-    static void convertFileCode(
+    void convertFileCode(
             String fileSourceDir,
             String goalFileDir,
             String code,
@@ -206,7 +262,15 @@ class File {
     }
 
 
-    static void convertFileCode(
+    /**
+     * 轉碼並處理
+     * @param fileSourceDir 來源檔案
+     * @param goalFileDir 輸出目標檔案
+     * @param code 原始檔案編碼
+     * @param convertEncode 輸出檔案編碼
+     * @param replaceStringL 要取代的字串
+     */
+    void convertFileCode(
             String fileSourceDir,
             String goalFileDir,
             String code,
@@ -223,6 +287,8 @@ class File {
         String fileTyle = fileSourceDir.substring(fileSourceDir.lastIndexOf("."),fileSourceDir.length());
 
         String comments = "新北市社政14期DB2升級轉碼批次處理"
+
+        InternetExplorer ie = new InternetExplorer()
 
         boolean hadReplace = false
 
@@ -252,7 +318,23 @@ class File {
         }
 
         lineL.each { lineI ->
-            pw.write(lineI)
+
+            String writerI
+
+            /*針對IE在UTF8環境下傳送中文的亂碼*/
+            if(convertEncode == "UTF-8" && fileTyle == ".jsp"){
+                try{
+                    writerI = ie.navigate(lineI)
+                }
+                catch (Exception ex){
+                    writerI = lineI
+                    setErrFileIEL(fileSourceDir)
+                }
+            }
+            else{
+                writerI = lineI
+            }
+            pw.write(writerI)
             pw.write("\r\n")
         }
 
@@ -270,7 +352,7 @@ class File {
      * @return 有找到
      * @throws IOException
      */
-    static List<String> searchFileContent(String filePath,String fileCode, String keyWord) throws Exception {
+    List<String> searchFileContent(String filePath,String fileCode, String keyWord) throws Exception {
 
         if(filePath == null){throw new Exception("The function searchFileContent param [filePath] can't null ");}
         if(fileCode == null){throw new Exception("The function searchFileContent param [fileCode] can't null ");}
@@ -306,7 +388,7 @@ class File {
      * @return 有找到
      * @throws IOException
      */
-    static List<String> searchFileContent(String filePath,String fileCode, List<String> keyWordL) throws Exception {
+    List<String> searchFileContent(String filePath,String fileCode, List<String> keyWordL) throws Exception {
         List<String> findLineL = []
 
         keyWordL.each { keyWordI ->
