@@ -11,7 +11,7 @@ class MainFlow {
     //參數設定:設定轉碼目標
     private final static String trunEncode = "UTF-8"
     //參數設定:起始目錄
-    private final static String startPath = "D:\\Wezoomtek\\swjweb"
+    private final static String startPath = "D:\\Wezoomtek\\swjweb\\"
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
@@ -95,7 +95,7 @@ class MainFlow {
 
         List<String> findLineL = []
 
-        String action = "convertAndReplace"
+        String action = "search"
 
         switch (action){
             case "search":
@@ -104,10 +104,10 @@ class MainFlow {
                         .filter({ fileSourceDirI -> fileSourceDirI != "" &&  file.checkEncoding(fileSourceDirI) != null})
                         .filter({fileSourceDirI ->  file.checkEncoding(fileSourceDirI) != null})
                         .forEach({ fileSourceDirI ->
-                            File.searchFileContent(
+                            file.searchFileContent(
                                 fileSourceDirI,
                                     file.checkEncoding(fileSourceDirI),
-                                "navigate"
+                                "StrUtil"
                             ).stream()
                                 .filter({stringI -> findLineL.indexOf(stringI) == -1})
                                 .each {stringI ->

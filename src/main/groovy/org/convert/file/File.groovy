@@ -12,8 +12,8 @@ class File {
 
     /**
      * 轉檔與處理檔案內容
-     * @param startPath
-     * @param purposePath
+     * @param startPath 來源路竟
+     * @param purposePath 目標路徑
      * @param trunEncode
      * @param replaceStringL
      * @return
