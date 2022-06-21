@@ -18,7 +18,8 @@ class MainFlow {
 //            ".java",
 //            ".js",".css",".txt",".properties"
     ]
-    //參數設定:目的路徑  private final static String purposePath = "/home/jameschang/Documents/swjwebTemp/web/jsp"
+    //參數設定:目的路徑
+    private final static String purposePath = "/home/jameschang/Documents/swjwebTemp/web/jsp"
     //排除路徑
     private final static String[] exPathL = [
             "build","dist","nbproject","PA-DOC",".git"
