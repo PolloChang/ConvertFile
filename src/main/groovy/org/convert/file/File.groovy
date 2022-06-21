@@ -3,6 +3,8 @@ package org.convert.file
 import org.convert.encoding.big5toutf8.InternetExplorer
 import org.mozilla.universalchardet.UniversalDetector
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import java.util.stream.Collectors
 
 /**
@@ -341,6 +343,90 @@ class File {
         pw.flush()
         pw.close()
 
+    }
+
+    void findWithRegexAndReplace(
+            String fileSourceDir,
+            String goalFileDir,
+            String code,
+            String convertEncode
+    ){
+
+        java.io.File f = new java.io.File(fileSourceDir)
+        LineSeparatorHelper.LINE_SEPARATOR getLineSeparator = LineSeparatorHelper.getLineSeparator(f)
+        String lineSeparator
+//        println getLineSeparator
+
+        if(getLineSeparator == LineSeparatorHelper.LINE_SEPARATOR.LINUX){
+//            println LineSeparatorHelper.LINE_SEPARATOR.LINUX
+            lineSeparator = '\n'
+        }else if(getLineSeparator == LineSeparatorHelper.LINE_SEPARATOR.MAC){
+//            println LineSeparatorHelper.LINE_SEPARATOR.MAC
+            lineSeparator = '\r'
+        }else if(getLineSeparator == LineSeparatorHelper.LINE_SEPARATOR.WINDOWS){
+//            println LineSeparatorHelper.LINE_SEPARATOR.WINDOWS
+            lineSeparator = '\r\n'
+        }else{
+//            println "???"
+            lineSeparator = '\r\n'
+        }
+
+        BufferedReader br = new BufferedReader( new InputStreamReader(new FileInputStream(fileSourceDir), code))
+
+        PrintWriter pw = new PrintWriter( new OutputStreamWriter(new FileOutputStream(goalFileDir), convertEncode))
+
+        List<String> lines = br.lines().collect(Collectors.toList())
+
+        Pattern reId = Pattern.compile("id=[\"']([^\"']+)")
+        Pattern reName = Pattern.compile("name=[\"']([^\"']+)")
+        Pattern reType = Pattern.compile("type=[\"']([^\"']+)")
+
+        List<String> lineL = new ArrayList<String>()
+        lines.stream()
+            .filter({lineI -> lineI != null})
+            .each { lineI ->
+//                println "loop[0] = "+lineI
+
+                /*去除空格*/
+                String compareLine = lineI.replaceAll("\\s*", "")
+                String idValue = ""
+                String nameValue = ""
+                String typeValue = ""
+                String finishContent = ""
+
+                Matcher matcherId = reId.matcher(compareLine)
+                Matcher  matcherName= reName.matcher(compareLine)
+                Matcher matcherType = reType.matcher(compareLine)
+                //取得id Value
+                while (matcherId.find()) {idValue = matcherId.group(1)}
+                //取得name Value
+                while (matcherName.find()) {nameValue = matcherName.group(1)}
+                //取得name Type
+                while (matcherType.find()) {typeValue = matcherType.group(1)}
+                if(typeValue in ["hidden","text"]){
+                    if(idValue && nameValue){
+                        if(nameValue!=idValue){
+                            finishContent = lineI.replace(idValue,nameValue)
+                        }
+                    }
+                }
+
+                if(finishContent == ""){
+                    finishContent = lineI
+                }
+
+//                println "loop[1] = "+finishContent
+//                println "========================================="
+                lineL.add(finishContent)
+            }
+
+        lineL.each { lineI ->
+            pw.write(lineI)
+            pw.write(lineSeparator)
+        }
+
+        pw.flush()
+        pw.close()
     }
 
 

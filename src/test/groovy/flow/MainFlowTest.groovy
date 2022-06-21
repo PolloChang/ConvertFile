@@ -2,7 +2,9 @@ package flow;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedHashMap
+import java.util.regex.Matcher
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,5 +96,72 @@ class MainFlowTest {
     @Test
     void convertBig5ToUTF8InIE() {
 
+    }
+
+    @Test
+    void compareRegex(){
+
+        String[] testL = [
+                """<input type="hidden" name="E_MM" id="E_YY"><%--//日期區間迄--%>""",
+                """                <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/beResetCSS.js" charset="utf-8"></script>""",
+                """sbResult.append("<input type='button' name='");""",
+                """sbResult.append("<input type='hidden' name='E_MM' id='E_YY'");""",
+                """sbResult.append("<input type='hidden' id ='E_MM' name='E_YY'");""",
+                """<table border=0 width="600">""",
+                """    <tr>""",
+                """    <td width="20"></td>""",
+                """                <td height="30" valign="bottom" align="center">""",
+                """                <!--<%= tagf.button(prg, "P", "btnQuery",  "列印", "P", "onQuery(1)",  "") %>-->""",
+                """                <%= tagf.button(prg, "E", "btnQuery",  "匯出Excel", "E", "onReportExcel(1)",  "") %>""",
+                """                </td>""",
+                """    </tr>""",
+                """                </table>""",
+                """<input type="hidden" name="E_MM" id="E_YY">""",
+                """<input type='radio' id = 'radio_' name='input1' />""",
+                """                <inputtype='radio'name='input1'id='radio_'/>""",
+                """                <%File fp = new File("C:\\log"); """,
+                """<input type="hidden" name="txt00_PAPER_NO" id=txt00_PAPER_NO>"""
+        ]
+
+        Pattern reId = Pattern.compile("id=[\"']([^\"']+)")
+        Pattern reName = Pattern.compile("name=[\"']([^\"']+)")
+        Pattern reType = Pattern.compile("type=[\"']([^\"']+)")
+
+        for(String lineI : testL){
+            println "loop[0] = "+lineI
+
+            /*去除空格*/
+            String compareLine = lineI.replaceAll("\\s*", "")
+            String idValue = ""
+            String nameValue = ""
+            String typeValue = ""
+            String finishContent = ""
+
+            Matcher matcherId = reId.matcher(compareLine)
+            Matcher  matcherName= reName.matcher(compareLine)
+            Matcher matcherType = reType.matcher(compareLine)
+            //取得id Value
+            while (matcherId.find()) {idValue = matcherId.group(1)}
+            //取得name Value
+            while (matcherName.find()) {nameValue = matcherName.group(1)}
+            //取得name Type
+            while (matcherType.find()) {typeValue = matcherType.group(1)}
+//            println "idValue = "+idValue
+//            println "nameValue = "+nameValue
+            if(typeValue in ["hidden","text"]){
+                if(idValue && nameValue){
+                    if(nameValue!=idValue){
+                        finishContent = lineI.replace(idValue,nameValue)
+                    }
+                }
+            }
+
+            if(finishContent == ""){
+                finishContent = lineI
+            }
+
+            println "loop[1] = "+finishContent
+            println "========================================="
+        }
     }
 }

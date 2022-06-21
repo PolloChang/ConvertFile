@@ -11,15 +11,14 @@ class MainFlow {
     //參數設定:設定轉碼目標
     private final static String trunEncode = "UTF-8"
     //參數設定:起始目錄
-    private final static String startPath = "D:\\Wezoomtek\\swjweb\\"
+    private final static String startPath = "/home/jameschang/Documents/gitContent/wezoom/test/swjweb/web/jsp"
     //參數設定:篩選檔案
     private final static String[] pFilterL = [
             ".jsp",
-            ".java",
-            ".js",".css",".txt",".properties"
+//            ".java",
+//            ".js",".css",".txt",".properties"
     ]
-    //參數設定:目的路徑
-    private final static String purposePath = "C:\\Wezoomtek\\swjweb"
+    //參數設定:目的路徑  private final static String purposePath = "/home/jameschang/Documents/swjwebTemp/web/jsp"
     //排除路徑
     private final static String[] exPathL = [
             "build","dist","nbproject","PA-DOC",".git"
@@ -96,9 +95,31 @@ class MainFlow {
 
         List<String> findLineL = []
 
-        String action = "convertAndReplace"
+        String action = "searchUseRegex"
 
         switch (action){
+            case "searchUseRegex":
+                println "searchUseRegex"
+                //轉檔
+                file.gFileList.stream()
+                        .filter({ fileSourceDirI -> fileSourceDirI != "" &&  file.checkEncoding(fileSourceDirI) != null})
+                        .filter({fileSourceDirI ->  file.checkEncoding(fileSourceDirI) != null})
+                        .forEach({ fileSourceDirI ->
+                            String fileEncoding = file.checkEncoding(fileSourceDirI)
+                            String goalFileDir = fileSourceDirI.replace(startPath,purposePath)
+                            java.io.File deleteFileI = new java.io.File(goalFileDir)
+                            deleteFileI.delete()
+                            file.creatFile(goalFileDir)
+                            file.findWithRegexAndReplace(
+                                    fileSourceDirI,
+                                    goalFileDir,
+                                    fileEncoding,
+                                    fileEncoding
+                            )
+                            println fileSourceDirI
+                            trunFiles ++
+                        })
+                break
             case "search":
                 //僅搜尋檔案
                 file.gFileList.stream()
